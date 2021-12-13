@@ -10,23 +10,23 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # End of warning supression
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--bfserver", "-s"
+parser.add_argument("-s", "--bfserver"
 	, help="address and port of BigFix server"
 	, nargs='?'
 	, default="10.10.220.60:52311" 
 	)
-parser.add_argument("--bfuser", "-u"
+parser.add_argument("-u", "--bfuser"
 	, help="BigFix REST API Username"
 	, nargs='?'
 	, default="IEMAdmin" 
 	)
-parser.add_argument("--bfpass", "-p"
+parser.add_argument("-p", "--bfpass"
 	, help="BigFix REST API Password"
 	, default="BigFix!123"
 	)
-parser.add_argument("--snurl", "-S", help="ServiceNow API Base URL")
-parser.add_argument("--snuser", "-U", help="ServiceNow API Username")
-parser.add_argument("--snpass", "-P", help="ServiceNow API Password")
+parser.add_argument("-S", "--snurl", help="ServiceNow API Base URL")
+parser.add_argument("-U", "--snuser", help="ServiceNow API Username")
+parser.add_argument("-P", "--snpass", help="ServiceNow API Password")
 parser.add_argument('days',type=int,help="Number of days to look back")
 args = parser.parse_args()
 
