@@ -135,9 +135,18 @@ req = requests.Request('POST'
 )
 
 prepped = session.prepare_request(req)
-	
+
 result = session.send(prepped, verify = False)
 
+# DEBUG log http result from servicenow API call
+with open("servicenow-results.log", "a") as snr:
+	snr.write("---------------------------------\n")
+	snr.write("BigFix query and results:\n")
+	snr.write(json.dumps(req, indent=2))
+	snr.write(json.dumps(result, indent=2))
+	snr.write("---------------------------------\n")
+
+	
 if (result.status_code == 200):
 	actions = json.loads(result.text)
 
@@ -153,7 +162,7 @@ if (result.status_code == 200):
 		# [1]	Action Name
 		# [2]	isMultipleActionGroup (when true there will be many subactions)
 		# [3]	subactionArray - The first one will always be the same as the "top"
-		#			[0][0] Subction ID
+		#			[0][0] Subaction ID
 		#			[0][1] Subaction Name
 		#			[1] Failure Status
 		#			[2] Start time of result
@@ -176,6 +185,7 @@ if (result.status_code == 200):
 		
 		# The key is the "top-id"-"sub-id"-"comp-id"
 		ticketKey = str(action_top) + "-" + str(sub_comp_id)
+
 			
 		# If key is not in ticketHash
 		if not ticketKey in ticketHash:
@@ -232,4 +242,5 @@ else:
 	print("Query [" + query + "] failed.")
 	print(result)
 	
-print("Normal termination")
+with open("servicenow-results.log", "a") as snr:
+	snr.write("Normal termination\n")
