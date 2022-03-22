@@ -83,7 +83,7 @@ POST_TEMPLATE = """{
   "node": "string",
   "category": "IT_BigFix",
   "application": "500346",
-  "domainName": "CSC-I",
+  "domainName": "NA",
   "incidentCategory": "Software",
   "incidentSubcategory": "Application Batch/Job/Transaction",
   "foundSupportGroupAction": "UseAssignmentRules"
