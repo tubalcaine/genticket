@@ -81,7 +81,7 @@ POST_TEMPLATE = """{
   "title": "string",
   "longDescription": "string",
   "node": "string",
-  "category": "DXC_IT_BigFix",
+  "category": "IT_BigFix",
   "application": "500346",
   "domainName": "CSC-I",
   "incidentCategory": "Software",
