@@ -93,7 +93,7 @@ except Exception as err:
 
 ## This is the session relevance query that pulls top level actions and actions results from
 ## the BigFix REST API. This query can be modified to change the set of actions that are
-## ticket candidates. For example, the clause 'name of it as lowercase does not 
+## ticket candidates. For example, the clause 'name of it as lowercase does not
 ## contain "testaction"' was added to allow operators to exclude actions from tickets
 ## by merely putting that word in the name of the action.
 query = f"""(id of it, name of it, multiple flag of it, \
@@ -113,14 +113,14 @@ not exists parent group of it and time issued of it > now - \
 
 session = requests.Session()
 session.auth = (bf_username, bf_password)
-response = session.get("https://" + bf_server + "/api/login", verify=False)
+response = session.get(f"https://{bf_server}/api/login", verify=False)
 
 qheader = {"Content-Type": "application/x-www-form-urlencoded"}
 
 qquery = {"relevance": query, "output": "json"}
 
 req = requests.Request(
-    "POST", "https://" + bf_server + "/api/query", headers=qheader, data=qquery
+    "POST", f"https://{bf_server}/api/query", headers=qheader, data=qquery
 )
 
 prepped = session.prepare_request(req)
