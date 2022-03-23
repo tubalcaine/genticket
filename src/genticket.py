@@ -50,30 +50,12 @@ fqdn = socket.getfqdn()
 
 # DEBUG log http result from servicenow API call
 with open("servicenow-results.log", "w", encoding="utf-8") as snr:
-    snr.write("DXC genticket run at " + time.asctime(time.gmtime()))
+    snr.write("genticket run at " + time.asctime(time.gmtime()))
 
 ## The POST template -- I hate to include it all here, but it is the simplest
 ## way to do it:
 
-# postTemplate = '''{
-# 	"EventList" : [
-# {
-#  "severity": "critical",
-#  "title": "string",
-#  "longDescription": "string",
-#  "node": "string",
-#  "category": "DXC_IT_BigFix",
-#  "application": "500346",
-#  "domainName": "CSC-I",
-#  "incidentCategory": "Software",
-#  "domainLookupBizSrvcName": "DXCIT BIGFIX Server Management",
-#  "incidentSubcategory": "Application Batch/Job/Transaction"
-# }
-# ]
-# }
-#'''
-
-POST_TEMPLATE = """{
+SN_POST_TEMPLATE = """{
 	"EventList" : [ 
 {
   "severity": "critical",
@@ -93,7 +75,7 @@ POST_TEMPLATE = """{
 """
 
 ## Populate python dict from json template
-post = json.loads(POST_TEMPLATE)
+post = json.loads(SN_POST_TEMPLATE)
 
 ## Initialize the json "memory" of tickets
 ticketHash = {}
@@ -111,9 +93,9 @@ except Exception as err:
 
 ## This is the session relevance query that pulls top level actions and actions results from
 ## the BigFix REST API. This query can be modified to change the set of actions that are
-## ticket candidates. For example, the clause 'name of it as lowercase does not contain "dxctest"'
-## was added to allow operators to exclude actions from tickets by merely putting that word
-## in the name of the action.
+## ticket candidates. For example, the clause 'name of it as lowercase does not 
+## contain "testaction"' was added to allow operators to exclude actions from tickets
+## by merely putting that word in the name of the action.
 query = f"""(id of it, name of it, multiple flag of it, \
 ((id of it, name of it) of action of it, status of it, \
 start time of it, end time of it, \
@@ -198,11 +180,11 @@ if result.status_code == 200:
             # Populate the POST with values
             post["EventList"][0][
                 "title"
-            ] = f"""DXC IT BigFix Patching failed for server \
+            ] = f"""BigFix Patching failed for server \
 {sub_comp_name} on {sub_fail_end}"""
             post["EventList"][0][
                 "longDescription"
-            ] = f"""DXC IT BigFix Patching failed for server \
+            ] = f"""BigFix Patching failed for server \
 {sub_comp_name}. The BigFix patch action {action_name} \
 id {str(action_top)} failed for computer {sub_comp_name} \
 id {str(sub_comp_id)} with status {sub_failure}. Sub action \
@@ -213,7 +195,7 @@ id {str(sub_comp_id)} with status {sub_failure}. Sub action \
             # Generate the ticket
             session.auth = (sn_username, sn_password)
             snreq = requests.Request(
-                "POST", f"{sn_url}/dxc/events/R1/create", json=post
+                "POST", f"{sn_url}/events/R1/create", json=post
             )
 
             snprepped = session.prepare_request(snreq)
