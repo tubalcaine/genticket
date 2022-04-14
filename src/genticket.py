@@ -133,8 +133,8 @@ result = session.send(prepped, verify=False)
 with open("servicenow-results.log", "a", encoding="utf-8") as snr:
     snr.write("---------------------------------\n")
     snr.write("BigFix query and results:\n")
-    snr.write(json.dumps(jsonpickle.encode(req), indent=2))
-    snr.write(json.dumps(jsonpickle.encode(result), indent=2))
+    snr.write(json.dumps(jsonpickle.encode(req), indent=4, ))
+    snr.write(json.dumps(jsonpickle.encode(result), indent=4))
     snr.write("---------------------------------\n")
 
 
@@ -142,7 +142,7 @@ if result.status_code == 200:
     actions = json.loads(result.text)
 
     print("-----------------------------------\n")
-    print(json.dumps(actions, indent=2))
+    print(json.dumps(actions, indent=4))
     print("-----------------------------------\n")
 
     for row in actions["result"]:
