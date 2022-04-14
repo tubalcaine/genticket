@@ -8,6 +8,8 @@ import json
 import argparse
 import socket
 import time
+
+import jsonpickle
 import requests
 
 # This is here ONLY to suppress self-signed certoficate warnings
@@ -131,8 +133,8 @@ result = session.send(prepped, verify=False)
 with open("servicenow-results.log", "a", encoding="utf-8") as snr:
     snr.write("---------------------------------\n")
     snr.write("BigFix query and results:\n")
-    snr.write(json.dumps(req, indent=2))
-    snr.write(json.dumps(result, indent=2))
+    snr.write(json.dumps(jsonpickle.encode(req), indent=2))
+    snr.write(json.dumps(jsonpickle.encode(result), indent=2))
     snr.write("---------------------------------\n")
 
 
