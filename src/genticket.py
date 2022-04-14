@@ -194,9 +194,7 @@ id {str(sub_comp_id)} with status {sub_failure}. Sub action \
 
             # Generate the ticket
             session.auth = (sn_username, sn_password)
-            snreq = requests.Request(
-                "POST", f"{sn_url}/events/R1/create", json=post
-            )
+            snreq = requests.Request("POST", f"{sn_url}/events/R1/create", json=post)
 
             snprepped = session.prepare_request(snreq)
 
