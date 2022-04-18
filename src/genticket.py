@@ -182,7 +182,7 @@ if result.status_code == 200:
             # Populate the POST with values
             post["EventList"][0][
                 "title"
-            ] = f"""BigFix Patching failed for server \
+            ] = f"""GENTICKET - BigFix Patching failed for server \
 {sub_comp_name} on {sub_fail_end}"""
             post["EventList"][0][
                 "longDescription"
