@@ -59,103 +59,10 @@ with open("servicenow-results.log", "w", encoding="utf-8") as snr:
 ## way to do it:
 
 SN_POST_TEMPLATE = """{
-    "parent": "",
-    "made_sla": "true",
-    "caused_by": "",
-    "watch_list": "",
-    "upon_reject": "cancel",
-    "sys_updated_on": "2022-04-18 19:34:10",
-    "child_incidents": "0",
-    "hold_reason": "",
-    "task_effective_number": "INC0010083",
-    "approval_history": "",
-    "number": "INC0010083",
-    "resolved_by": "",
-    "sys_updated_by": "admin",
-    "opened_by": {
-      "link": "https://dev106816.service-now.com/api/now/table/sys_user/6816f79cc0a8016401c5a33be04be441",
-      "value": "6816f79cc0a8016401c5a33be04be441"
-    },
-    "user_input": "",
-    "sys_created_on": "2022-04-18 19:34:10",
-    "sys_domain": {
-      "link": "https://dev106816.service-now.com/api/now/table/sys_user_group/global",
-      "value": "global"
-    },
-    "state": "1",
-    "route_reason": "",
-    "sys_created_by": "admin",
-    "knowledge": "false",
-    "order": "",
-    "calendar_stc": "",
-    "closed_at": "",
-    "cmdb_ci": {
-      "link": "https://dev106816.service-now.com/api/now/table/cmdb_ci/baa896f32f19411093d8cc96f699b66a",
-      "value": "baa896f32f19411093d8cc96f699b66a"
-    },
-    "delivery_plan": "",
-    "contract": "",
-    "impact": "3",
-    "active": "true",
-    "work_notes_list": "",
-    "business_service": "",
-    "priority": "4",
-    "sys_domain_path": "/",
-    "rfc": "",
-    "time_worked": "",
-    "expected_start": "",
-    "opened_at": "2022-04-18 19:34:10",
-    "business_duration": "",
-    "group_list": "",
-    "work_end": "",
-    "caller_id": "",
-    "reopened_time": "",
-    "resolved_at": "",
-    "approval_set": "",
-    "subcategory": "",
-    "work_notes": "",
-    "universal_request": "",
-    "short_description": "Action (63698)Policy Action - Polkit: CVE-2021-4034 failed for bfrh81a.gbl.tx.usa",
-    "close_code": "",
-    "correlation_display": "",
-    "delivery_task": "",
-    "work_start": "",
-    "assignment_group": "",
-    "additional_assignee_list": "",
-    "business_stc": "",
-    "description": "BigFix action failed for endpoint bfrh81a.gbl.tx.usa. The BigFix action Policy Action - Polkit: CVE-2021-4034 id 63698 failed for computer bfrh81a.gbl.tx.usa id 1617930287 with status Failed. Sub action Policy Action - Polkit: CVE-2021-4034 id 63698 was the first failed item.",
-    "calendar_duration": "",
-    "close_notes": "",
-    "notify": "1",
-    "service_offering": "",
-    "sys_class_name": "incident",
-    "closed_by": "",
-    "follow_up": "",
-    "parent_incident": "",
-    "sys_id": "6ed25fb32f72011093d8cc96f699b6f7",
-    "contact_type": "",
-    "reopened_by": "",
-    "incident_state": "1",
-    "urgency": "2",
-    "problem_id": "",
-    "company": "",
-    "reassignment_count": "0",
-    "activity_due": "",
-    "assigned_to": "",
-    "severity": "3",
-    "comments": "",
-    "approval": "not requested",
-    "sla_due": "",
-    "comments_and_work_notes": "",
-    "due_date": "",
-    "sys_mod_count": "0",
-    "reopen_count": "0",
-    "sys_tags": "",
-    "escalation": "0",
-    "upon_approval": "proceed",
-    "correlation_id": "",
-    "location": "",
-    "category": "inquiry"
+"description": "BigFix action failed for endpoint bfrh82mdm.gbl.tx.usa. The BigFix action Policy Action - Polkit: CVE-2021-4034 id 63652 failed for computer bfrh82mdm.gbl.tx.usa id 1087328920 with status Failed. Sub action Policy Action - Polkit: CVE-2021-4034 id 63652 was the first failed item.",
+"short_description": "Action (63652)Policy Action - Polkit: CVE-2021-4034 failed for bfrh82mdm.gbl.tx.usa",
+"urgency": "2",
+"cmdb_ci": "bfrh82mdm.gbl.tx.usa"
 }""".strip()
 
 ## Populate python dict from json template
@@ -215,7 +122,12 @@ result = session.send(prepped, verify=False)
 with open("servicenow-results.log", "a", encoding="utf-8") as snr:
     snr.write("---------------------------------\n")
     snr.write("BigFix query and results:\n")
-    snr.write(json.dumps(jsonpickle.encode(req), indent=4, ))
+    snr.write(
+        json.dumps(
+            jsonpickle.encode(req),
+            indent=4,
+        )
+    )
     snr.write(json.dumps(jsonpickle.encode(result), indent=4))
     snr.write("---------------------------------\n")
 
@@ -262,23 +174,24 @@ if result.status_code == 200:
         # If key is not in ticketHash
         if not ticketKey in ticketHash:
             # Populate the POST with values
-            post["EventList"][0][
-                "title"
-            ] = f"""BIGFIX Patching failed for server \
+            post[
+                "short_description"
+            ] = f"""GENTICKET - BIGFIX Patching failed for server \
 {sub_comp_name} on {sub_fail_end}"""
-            post["EventList"][0][
-                "longDescription"
-            ] = f"""GENTICKET - BigFix Patching failed for server \
+            post[
+                "description"
+            ] = f"""BigFix Patching failed for server \
 {sub_comp_name}. The BigFix patch action {action_name} \
 id {str(action_top)} failed for computer {sub_comp_name} \
 id {str(sub_comp_id)} with status {sub_failure}. Sub action \
 {sub_name} id {str(sub_id)} was the first failed item."""
-            post["EventList"][0]["node"] = sub_comp_name
-            post["EventList"][0]["eventsourcesendingserver"] = fqdn
+            post["cmdb_ci"] = sub_comp_name
 
             # Generate the ticket
             session.auth = (sn_username, sn_password)
-            snreq = requests.Request("POST", f"{sn_url}/api/now/table/incident", json=post)
+            snreq = requests.Request(
+                "POST", f"{sn_url}/api/now/table/incident", json=post
+            )
 
             snprepped = session.prepare_request(snreq)
 
