@@ -221,7 +221,7 @@ id {str(sub_comp_id)} with status {sub_failure}. Sub action \
             # Log the SN REST transaction
             with open(
                 f"SNAPI-{str(action_top)}-{str(sub_comp_id)}.json",
-                "a",
+                "w",
                 encoding="utf-8",
             ) as restFile:
                 json.dump(post, restFile, indent=4)
